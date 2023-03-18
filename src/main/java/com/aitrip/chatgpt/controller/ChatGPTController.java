@@ -3,7 +3,7 @@ package com.aitrip.chatgpt.controller;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.aitrip.chatgpt.model.StreamMsg;
-import com.aitrip.chatgpt.util.LocalCacheUtil;
+import com.aitrip.chatgpt.util.LocalCache;
 import com.aitrip.chatgpt.listener.OpenAIEventSourceListener;
 import com.unfbx.chatgpt.OpenAiClient;
 import com.unfbx.chatgpt.OpenAiStreamClient;
@@ -32,26 +32,31 @@ public class ChatGPTController {
     @Autowired
     private OpenAiStreamClient openAiStreamClient;
 
-    @GetMapping("/chat")
+
     @CrossOrigin
-    public SseEmitter chat(@RequestBody() StreamMsg msg) throws Exception{
+    @RequestMapping(value="/chat",produces="text/event-stream;charset=UTF-8")
+    public SseEmitter chat(@RequestBody() StreamMsg streamMsg, @RequestHeader Map<String, String> headers) throws IOException {
         //默认30秒超时,设置为0L则永不超时
         SseEmitter sseEmitter = new SseEmitter(0l);
-        String uid = msg.getUid();
+        String uid = headers.get("uid");
         if (StrUtil.isBlank(uid)) {
             throw new BaseException(CommonError.SYS_ERROR);
         }
-        String messageContext = (String) LocalCacheUtil.CACHE.get(uid);
+        String msg = streamMsg.getMsg();
+        if (StrUtil.isBlank(msg)) {
+            throw new BaseException(CommonError.SYS_ERROR);
+        }
+        String messageContext = (String) LocalCache.CACHE.get(uid);
         List<Message> messages = new ArrayList<>();
         if (StrUtil.isNotBlank(messageContext)) {
             messages = JSONUtil.toList(messageContext, Message.class);
             if (messages.size() >= 10) {
                 messages = messages.subList(1, 10);
             }
-            Message currentMessage = Message.builder().content(msg.getMsg()).role(Message.Role.USER).build();
+            Message currentMessage = Message.builder().content(msg).role(Message.Role.USER).build();
             messages.add(currentMessage);
         } else {
-            Message currentMessage = Message.builder().content(msg.getMsg()).role(Message.Role.USER).build();
+            Message currentMessage = Message.builder().content(msg).role(Message.Role.USER).build();
             messages.add(currentMessage);
         }
         sseEmitter.send(SseEmitter.event().id(uid).name("连接成功！！！！").data(LocalDateTime.now()).reconnectTime(3000));
@@ -71,7 +76,7 @@ public class ChatGPTController {
         );
         OpenAIEventSourceListener openAIEventSourceListener = new OpenAIEventSourceListener(sseEmitter);
         openAiStreamClient.streamChatCompletion(messages, openAIEventSourceListener);
-        LocalCacheUtil.CACHE.put(uid, JSONUtil.toJsonStr(messages), LocalCacheUtil.TIMEOUT);
+        LocalCache.CACHE.put(uid, JSONUtil.toJsonStr(messages), LocalCache.TIMEOUT);
         return sseEmitter;
     }
 
@@ -102,6 +107,8 @@ public class ChatGPTController {
 
         return new Result<>(chatCompletionMsg.getRequestId(),HttpStatus.OK,"",list);
     }*/
+
+
 
 
 

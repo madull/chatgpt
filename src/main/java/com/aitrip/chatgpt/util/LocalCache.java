@@ -10,7 +10,7 @@ import cn.hutool.core.date.DateUnit;
  * @author https:www.unfbx.com
  * @date 2023-03-10
  */
-public class LocalCacheUtil {
+public class LocalCache {
     /**
      * 缓存时长
      */

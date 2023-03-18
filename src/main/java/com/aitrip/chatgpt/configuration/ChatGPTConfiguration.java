@@ -47,7 +47,7 @@ public class ChatGPTConfiguration {
 
     @Profile("dev")
     @Bean
-    public  Proxy proxy(@Value("${ip:127.0.0.1}") String ip,@Value("${port:7890}") Integer port){
+    public  Proxy proxy(@Value("${proxyIp:127.0.0.1}") String ip,@Value("${port:7890}") Integer port){
         return new Proxy(Proxy.Type.HTTP, new InetSocketAddress(ip, port));
     }
 
