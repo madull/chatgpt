@@ -1,0 +1,8 @@
+===2023-03-18 15:32:54.577 INFO  com.aitrip.chatgpt.Application Line:55  - Starting Application using Java 1.8.0_361 on MacBook-Pro.local with PID 10737 (/Users/shiya/source/chatgpt/target/classes started by shiya in /Users/shiya/source/chatgpt)
+===2023-03-18 15:32:54.583 INFO  com.aitrip.chatgpt.Application Line:637 - The following 1 profile is active: "dev"
+===2023-03-18 15:32:56.122 INFO  org.apache.coyote.http11.Http11NioProtocol Line:173 - Initializing ProtocolHandler ["http-nio-8000"]
+===2023-03-18 15:32:56.123 INFO  org.apache.catalina.core.StandardService Line:173 - Starting service [Tomcat]
+===2023-03-18 15:32:56.124 INFO  org.apache.catalina.core.StandardEngine Line:173 - Starting Servlet engine: [Apache Tomcat/9.0.71]
+===2023-03-18 15:32:56.204 INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] Line:173 - Initializing Spring embedded WebApplicationContext
+===2023-03-18 15:32:57.118 INFO  org.apache.coyote.http11.Http11NioProtocol Line:173 - Starting ProtocolHandler ["http-nio-8000"]
+===2023-03-18 15:32:57.157 INFO  com.aitrip.chatgpt.Application Line:61  - Started Application in 3.379 seconds (JVM running for 4.142)
