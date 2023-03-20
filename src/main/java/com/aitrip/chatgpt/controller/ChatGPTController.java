@@ -37,7 +37,7 @@ public class ChatGPTController {
     @RequestMapping(value="/chat",produces="text/event-stream;charset=UTF-8")
     public SseEmitter chat(@RequestBody() StreamMsg streamMsg, @RequestHeader Map<String, String> headers) throws IOException {
         //默认30秒超时,设置为0L则永不超时
-        SseEmitter sseEmitter = new SseEmitter(0l);
+        SseEmitter sseEmitter = new SseEmitter(-1L);
         String uid = headers.get("uid");
         if (StrUtil.isBlank(uid)) {
             throw new BaseException(CommonError.SYS_ERROR);
@@ -59,7 +59,7 @@ public class ChatGPTController {
             Message currentMessage = Message.builder().content(msg).role(Message.Role.USER).build();
             messages.add(currentMessage);
         }
-        sseEmitter.send(SseEmitter.event().id(uid).name("连接成功！！！！").data(LocalDateTime.now()).reconnectTime(3000));
+        //sseEmitter.send(SseEmitter.event().id(uid).name("连接成功！！！！").data("").reconnectTime(3000));
         sseEmitter.onCompletion(() -> {
             log.info(LocalDateTime.now() + ", uid#" + uid + ", on completion");
         });
